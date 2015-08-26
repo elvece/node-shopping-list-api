@@ -17,16 +17,15 @@ router.get('/items/:id', function(req, res){
   res.json(response);
 });
 
-//POST route handler -n
-router.post('/items', function(req, res) {//edit to include message if item already in list
-  //create new item instance
-  utility.itemData.storage.addItem(req.body.name);
-  res.send(utility.itemData.storage);
+//POST route handler
+router.post('/items', function(req, res) {
+  var response = utility.postHandler(req.body.name);
+  res.json(response);
 });
 
 //PUT route handler
 router.put('/items/:id', function(req, res){
-  var response = utility.putHandler(req.params.id, req.params.name);
+  var response = utility.putHandler(req.params.id, req.body.name);
   res.json(response);
 });
 
