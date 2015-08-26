@@ -16,6 +16,8 @@ router.get('/items', function(req, res) {
 router.post('/items', function(req, res) {
   // add code here to create new item instance
   storage.addItem(req.body.name);
+  res.send(storage);
+  console.log(storage);
 });
 
 
