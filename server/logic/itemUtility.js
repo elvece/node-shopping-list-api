@@ -25,20 +25,25 @@ function createItem(itemName){
     return {message: 'Item is already in this list.'};
     } else {
       itemData.storage.addItem(itemName);
-      return {message: 'Item was successfully added to list.', newList: storageItemsArr};
+      return {
+        message: 'Item was successfully added to list.',
+        newList: storageItemsArr};
     }
   }
 }
 
-//handles PUT request with success message, updates item if exists, otherwise adds item
-//needs an error to handle if no name submitted in body
+//handles PUT request, which updates item with success message if item exists, adds item with success message if does not exist, and throws and error if item already exists
 //needs an error to handle duplicates
 function updateItem(itemID, body){
   //filters item from storageItemsArr based on itemID argument
   var filteredItem = itemFilter(itemID);
   //result holder
   var result;
-  //if item exists from filter
+  //test if any data is passed in
+  if (Object.keys(body).length === 0){
+    return {message: 'Please enter something to change!'};
+  }
+  //if item exists in array (from filter)
   if (filteredItem.length > 0){
     for (var key in body){//looking for the key of name in body params
       if (key === "name"){
@@ -47,28 +52,23 @@ function updateItem(itemID, body){
     }
     result = {
       updatedItem: filteredItem[0],
+      newList: storageItemsArr,
       message: 'Item was successfully updated'
     };
-  } else {
-      //if the item is not anywhere in the array, add the item
-      //otherwise, error: this item already exists, if you want to update the item, reference the list for the item's id and update it using the item's id
-      //be sure to print out list in return message
-
-      //if item exists in array
-      if (filteredItem.length > 0) {
-        //adds item based on name entered into body
-        var addedItem = itemData.storage.addItem(body.name);
-        result = {
-          //gets item from storage item array based on id
-          addedItem: storageItemsArr.itemID,
-          updatedList: storageItemsArr,
-          message: 'Since this item did not exist, item was successfully added to the shopping list with a sequential id number.'
-        };
-      } else {
-        result = {
-          list: storageItemsArr,
-          message: 'This item already exists in the list. If you want to update the item, reference the list below and find the item id for the item you wish to change. Then, update the item using the proper id.'
-        };
+  } else if (body.name === filteredItem[0].name){
+      result = {
+        list: storageItemsArr,
+        message: 'This item already exists in the list. If you want to update the item, reference the list below and find the item id for the item you wish to change. Then, update the item using the proper id.'
+      };
+    } else {
+      //adds item based on name entered into body
+      var addedItem = itemData.storage.addItem(body.name);
+      result = {
+        //gets item from storage item array based on id
+        addedItem: storageItemsArr.itemID,
+        updatedList: storageItemsArr,
+        message: 'Since this item did not exist, item was successfully added to the shopping list with a sequential id number.'
+      };
       }
       // //adds item based on name entered into body
       // var addedItem = itemData.storage.addItem(body.name);
@@ -77,8 +77,7 @@ function updateItem(itemID, body){
       //   addedItem: storageItemsArr.itemID,
       //   message: 'Since this item did not exist, Item successfully added to the shopping list.'
       //   //QUESTION: when i set id params to number that is not in sequential order, why does it not display the addedItem portion of the result, but only the message
-      // };
-    }
+      // };}
   return result;
 }
 
