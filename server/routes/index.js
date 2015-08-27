@@ -12,20 +12,20 @@ router.get('/items', function(req, res) {
 });
 
 //GET route handler - single item by id
-router.get('/items/:id', function(req, res){
-  var response = utility.itemFilter(+req.params.id);
+router.get('/item/:id', function(req, res){
+  var response = utility.getItem(+req.params.id);
   res.json(response);
 });
 
 //POST route handler
 router.post('/items', function(req, res) {
-  var response = utility.postHandler(req.body.name);
+  var response = utility.createItem(req.body.name);
   res.json(response);
 });
 
 //PUT route handler
-router.put('/items/:id', function(req, res){
-  var response = utility.putHandler(req.params.id, req.body.name);
+router.put('/item/:id', function(req, res){
+  var response = utility.updateItem(+req.params.id, req.body);
   res.json(response);
 });
 
