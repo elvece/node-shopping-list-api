@@ -12,7 +12,7 @@ function itemFilter(itemID){
 function getItem(itemID){
   var filteredItem = itemFilter(itemID);
   if (filteredItem.length === 0) {
-    return {message: 'Item does not exist in this list'};
+    return {message: 'Item does not exist in this list.'};
   } else {
       return filteredItem;
     }
@@ -43,9 +43,8 @@ function updateItem(itemID, body){
   if (Object.keys(body).length === 0){
     return {message: 'Please enter something to change!'};
   }
-
+  //update, add, or error
   for (var i = 0; i < storageItemsArr.length; i++) {
-
     //if item exists in array (from filter)
     if (filteredItem.length > 0){
       for (var key in body){//looking for the key of name in body params
@@ -55,7 +54,7 @@ function updateItem(itemID, body){
       }
       return {
         newList: storageItemsArr,
-        message: 'Item was successfully updated'
+        message: 'Item was successfully updated.'
       };
       //if item not in list
     } else if (filteredItem.length === 0){
@@ -85,7 +84,7 @@ function deleteItem(itemID){
     result = {
       updatedList: storageItemsArr,
       deletedItem: filteredItem,
-      message: 'Item was successfully deleted'
+      message: 'Item was successfully deleted.'
     };
   } else {
     result = {message: 'Item does not exist in the list.'};
