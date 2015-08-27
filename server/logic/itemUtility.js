@@ -38,53 +38,59 @@ function updateItem(itemID, body){
   //filters item from storageItemsArr based on itemID argument
   var filteredItem = itemFilter(itemID);
   //result holder
-  var result;
+
   //test if any data is passed in
   if (Object.keys(body).length === 0){
     return {message: 'Please enter something to change!'};
   }
-  //if item exists in array (from filter)
-  if (filteredItem.length > 0){
-    for (var key in body){//looking for the key of name in body params
-      if (key === "name"){
-        filteredItem[0].name = body.name;
+
+  for (var i = 0; i < storageItemsArr.length; i++) {
+
+    //if item exists in array (from filter)
+    if (filteredItem.length > 0){
+      for (var key in body){//looking for the key of name in body params
+        if (key === "name"){
+          filteredItem[0].name = body.name;
+        }
       }
-    }
-    result = {
-      updatedItem: filteredItem[0],
-      newList: storageItemsArr,
-      message: 'Item was successfully updated'
-    };
-  } else if (body.name === filteredItem[0].name){
-      result = {
+      return {
+        newList: storageItemsArr,
+        message: 'Item was successfully updated'
+      };
+      //if item not in list
+    } else if (filteredItem.length === 0){
+      //add item
+      var addedItem = itemData.storage.addItem(body.name);
+      return {
         list: storageItemsArr,
-        message: 'This item already exists in the list. If you want to update the item, reference the list below and find the item id for the item you wish to change. Then, update the item using the proper id.'
+        message: 'Item added.'
       };
     } else {
-      //adds item based on name entered into body
-      var addedItem = itemData.storage.addItem(body.name);
-      result = {
-        //gets item from storage item array based on id
-        addedItem: storageItemsArr.itemID,
-        updatedList: storageItemsArr,
-        message: 'Since this item did not exist, item was successfully added to the shopping list with a sequential id number.'
+      return {
+        message: 'Item does not exist.'
       };
-      }
-      // //adds item based on name entered into body
-      // var addedItem = itemData.storage.addItem(body.name);
-      // result = {
-      //   //gets item from storage item array based on id
-      //   addedItem: storageItemsArr.itemID,
-      //   message: 'Since this item did not exist, Item successfully added to the shopping list.'
-      //   //QUESTION: when i set id params to number that is not in sequential order, why does it not display the addedItem portion of the result, but only the message
-      // };}
-  return result;
+    }
+  }
 }
 
-//handles DELETE request
-function deleteItem(){
-  //sucess message if item is deleted
-  //error message if item does not exist
+//handles DELETE request with success message if item is deleted and error message if item does not exist
+function deleteItem(itemID){
+  //get item by entered id
+  var filteredItem = itemFilter(itemID);
+  //result bucket
+  var result;
+  //if item exists, remove it from array
+  if (filteredItem.length > 0){
+    storageItemsArr.splice(itemID, 1);
+    result = {
+      updatedList: storageItemsArr,
+      deletedItem: filteredItem,
+      message: 'Item was successfully deleted'
+    };
+  } else {
+    result = {message: 'Item does not exist in the list.'};
+  }
+  return result;
 }
 
 
@@ -93,5 +99,6 @@ module.exports = {
   itemFilter: itemFilter,
   getItem: getItem,
   createItem: createItem,
-  updateItem: updateItem
+  updateItem: updateItem,
+  deleteItem: deleteItem
 };

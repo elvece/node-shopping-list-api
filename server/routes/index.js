@@ -26,6 +26,13 @@ router.post('/items', function(req, res) {
 //PUT route handler
 router.put('/item/:id', function(req, res){
   var response = utility.updateItem(+req.params.id, req.body);
+  console.log(response);
+  res.json(response);
+});
+
+//DELETE route handler
+router.delete('/item/:id', function(req, res){
+  var response = utility.deleteItem(+req.params.id);
   res.json(response);
 });
 
