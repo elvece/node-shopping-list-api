@@ -8,4 +8,5 @@ $(document).on('ready', function() {
 $('form').on('submit', function(event){
   event.preventDefault();
   $('#item-name').val();
+
 });
